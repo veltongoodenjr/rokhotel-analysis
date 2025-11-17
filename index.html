@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ROK Hotel Social Media Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      /* ROK palette */
+      --rok-green: #395441;
+      --rok-gold: #fbc354;
+      --rok-coral: #d56863;
+
+      --bg-main: #111812;
+      --bg-alt: #0b120d;
+      --bg-slide: rgba(15, 23, 19, 0.96);
+
+      --accent: var(--rok-gold);
+      --accent-soft: rgba(251, 195, 84, 0.16);
+      --accent-strong: var(--rok-coral);
+
+      --text-main: #f7f7f7;
+      --text-muted: #b4bfc0;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --card-bg: rgba(11, 17, 14, 0.96);
+      --shadow-soft: 0 26px 60px rgba(0, 0, 0, 0.65);
+      --radius-lg: 24px;
+      --radius-pill: 999px;
+      --transition-fast: 200ms ease-out;
+      --transition-slow: 500ms ease;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, #1f2933 0, transparent 55%),
+        radial-gradient(circle at bottom, #020408 0, #020408 60%);
+      background-color: var(--bg-main);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 3.5vw 0.8rem;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo img {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .progress-shell {
+      flex: 1;
+      max-width: 360px;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .progress-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .progress-bar {
+      position: relative;
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.18);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 14%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 0 24px rgba(251, 195, 84, 0.65);
+      transition: width var(--transition-slow);
+    }
+
+    .slides {
+      position: relative;
+      flex: 1;
+      padding: 0.75rem 3.5vw 6.4rem; /* more bottom padding so it clears the navbar */
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      margin: 0 auto;
+      padding: 1.25rem;
+      max-width: 1240px;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(40px) translateY(8px);
+      transition:
+        opacity var(--transition-slow),
+        transform var(--transition-slow);
+      pointer-events: none;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) translateY(0);
+      pointer-events: auto;
+    }
+
+    .slide-inner {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      padding: clamp(1.75rem, 4vw, 2.7rem);
+      background: linear-gradient(
+          140deg,
+          rgba(57, 84, 65, 0.3),
+          transparent 45%,
+          rgba(11, 17, 14, 0.96)
+        ),
+        var(--bg-slide);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      backdrop-filter: blur(22px);
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .slide-title {
+      font-size: clamp(1.9rem, 3vw, 2.4rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 650;
+    }
+
+    .slide-kicker {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .slide-tag {
+      padding: 0.35rem 0.8rem;
+      font-size: 0.8rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-muted);
+      background: radial-gradient(
+        circle at top,
+        rgba(148, 163, 184, 0.14),
+        transparent 55%
+      );
+      white-space: nowrap;
+    }
+
+    .slide-body {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 2fr);
+      gap: clamp(1.5rem, 3vw, 2.4rem);
+      align-items: flex-start;
+    }
+
+    .slide-body.full {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lead-text {
+      font-size: clamp(1.02rem, 1.1vw, 1.1rem);
+      color: var(--text-muted);
+      max-width: 40rem;
+      line-height: 1.6;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .pill {
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      color: var(--text-muted);
+      background: rgba(9, 14, 11, 0.98);
+    }
+
+    .pill.primary {
+      background: radial-gradient(circle at top left, var(--accent), var(--accent-strong));
+      color: #111812;
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    .pill.ghost {
+      background: transparent;
+      border-style: dashed;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 0.85rem 0.95rem;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .card-emph {
+      font-size: 0.9rem;
+      color: var(--accent-strong);
+      font-weight: 500;
+    }
+
+    .stat-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .stat {
+      font-size: 0.78rem;
+      padding: 0.32rem 0.7rem;
+      border-radius: var(--radius-pill);
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border: 1px solid rgba(251, 195, 84, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .stat span {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    ul.clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    ul.clean li {
+      position: relative;
+      padding-left: 1.1rem;
+      line-height: 1.5;
+    }
+
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.58em;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      opacity: 0.95;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .compare-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 0.85rem 0.95rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.85rem;
+    }
+
+    .compare-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .compare-focus {
+      color: var(--accent-strong);
+      font-size: 0.83rem;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .footer-note {
+      margin-top: auto;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.88;
+    }
+
+    .controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 1.4rem;
+      padding: 0 3.5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .controls-left,
+    .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      pointer-events: auto;
+    }
+
+    .nav-button {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(9, 14, 11, 0.98);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      padding: 0.38rem 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition:
+        border-color var(--transition-fast),
+        background var(--transition-fast),
+        transform 120ms ease-out,
+        box-shadow 120ms ease-out;
+    }
+
+    .nav-button.primary {
+      background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+      border-color: transparent;
+      color: #111812;
+      font-weight: 600;
+      box-shadow: 0 12px 30px rgba(251, 195, 84, 0.6);
+    }
+
+    .nav-button:disabled {
+      opacity: 0.35;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .nav-button:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(6, 10, 7, 0.9);
+    }
+
+    .nav-button.primary:not(:disabled):hover {
+      box-shadow: 0 16px 38px rgba(251, 195, 84, 0.9);
+    }
+
+    .nav-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    .slide-indicator {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .slide-indicator span {
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    .dots {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(148, 163, 184, 0.35);
+      cursor: pointer;
+      padding: 0;
+      transition:
+        transform var(--transition-fast),
+        background var(--transition-fast),
+        box-shadow var(--transition-fast),
+        width 160ms ease-out;
+    }
+
+    .dot.active {
+      width: 18px;
+      background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 0 12px rgba(251, 195, 84, 0.9);
+    }
+
+   .hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  opacity: 0.9;
+  transition: opacity 240ms ease-out, transform 240ms ease-out;
+}
+
+.hint.hidden {
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+}
+    
+
+    @media (max-width: 900px) {
+      .slides {
+        padding: 0.5rem 4vw 6.6rem;
+      }
+
+      .slide-inner {
+        padding: 1.4rem 1.2rem 1.5rem;
+      }
+
+      .slide-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .top-bar {
+        padding-inline: 4vw;
+      }
+
+      .controls {
+        padding-inline: 4vw;
+      }
+
+      .progress-label {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .slide-header {
+        flex-direction: column;
+      }
+
+      .brand-title {
+        font-size: 0.9rem;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      .controls-left .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <header class="top-bar">
+      <div class="brand">
+        <div class="brand-logo">
+          <!-- You can also download this and host it locally in your repo if you prefer -->
+          <img src="https://i.imgur.com/MvBZpZ2.png" alt="ROK Hotel Kingston logo" />
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">ROK Hotel Kingston</div>
+          <div class="brand-subtitle">Social Media Marketing I · UCC</div>
+        </div>
+      </div>
+      <div class="progress-shell">
+        <span class="progress-label">Slide progress</span>
+        <div class="progress-bar" aria-hidden="true">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="slides">
+      <!-- Slide 1: Title -->
+      <section class="slide active" data-index="0" aria-label="Title slide">
+        <div class="slide-inner">
+          <div class="slide-header">
+            <div>
+              <div class="slide-kicker">Assignment presentation</div>
+              <h1 class="slide-title">ROK Hotel Kingston social media analysis</h1>
+            </div>
+            <div class="slide-tag">
+              Social Media Marketing I · University of the Commonwealth Caribbean
+            </div>
+          </div>
+
+          <div class="slide-body full">
+            <div>
+              <p class="lead-text">
+                Group analysis of ROK Hotel Kingston and its social presence,
+                with a focus on platform activity, content strategy, competitor
+                benchmarks and practical recommendations to improve engagement.
+              </p>
+
+              <div class="pill-row">
+                <span class="pill primary">Brand: ROK Hotel Kingston · Hilton Tapestry Collection</span>
+                <span class="pill">Location: Downtown Kingston · Jamaica</span>
+                <span class="pill ghost">Opened: 2022</span>
+              </div>
+
+              <div style="margin-top:1.4rem; display:grid; gap:0.4rem; max-width:440px;">
+                <div class="section-label">Today we cover</div>
+                <ul class="clean">
+                  <li>ROK Hotel profile and positioning in the Kingston market</li>
+                  <li>Current social footprint, activity and content themes</li>
+                  <li>High level comparison with key hotel competitors in Jamaica</li>
+                  <li>Actionable ideas to strengthen engagement and storytelling</li>
+                </ul>
+              </div>
+
+              <div style="margin-top:1.4rem; display:flex; flex-wrap:wrap; gap:0.7rem;">
+                <div class="pill">Prepared by: Group members (insert names)</div>
+                <div class="pill">Date: November 2025</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Company profile -->
+      <section class="slide" data-index="1" aria-label="Company profile">
+        <div class="slide-inner">
+          <div class="slide-header">
+            <div>
+              <div class="slide-kicker">Slide 2</div>
+              <h2 class="slide-title">Company profile</h2>
+            </div>
+            <div class="slide-tag">Brand foundations</div>
+          </div>
+
+          <div class="slide-body">
+            <div>
+              <p class="lead-text">
+                ROK Hotel Kingston is a 168 room Hilton Tapestry Collection property
+                positioned as a modern lifestyle hub in Downtown Kingston where
+                business travel, art and local culture come together.
+              </p>
+
+              <div style="margin-top:1.2rem;">
+                <div class="section-label">Core facts</div>
+                <ul class="clean">
+                  <li>Opened in 2022 as the first Hilton Tapestry Collection hotel in the Caribbean.</li>
+                  <li>Located on the Kingston waterfront with panoramic city and harbour views.</li>
+                  <li>168 rooms and suites targeted at business and leisure guests.</li>
+                  <li>Mix of corporate, meetings and weekend staycation segments.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <div class="section-label">Guest experience highlights</div>
+              <ul class="clean">
+                <li>ROKstone rooftop bar and pool that position the hotel as a social meeting point in the city.</li>
+                <li>Multiple dining outlets including Palate and ROK Café plus curated food and beverage events.</li>
+                <li>Flexible meeting and event spaces aimed at corporate gatherings, launches and creatives.</li>
+                <li>Strong design language with Jamaican art pieces in public areas that support a local storytelling angle.</li>
+              </ul>
+
+              <div class="stat-chips">
+                <div class="stat">
+                  <span>Urban lifestyle</span>
+                  <span aria-hidden="true">•</span>
+                  Business plus leisure
+                </div>
+                <div class="stat">
+                  <span>Downtown revival</span>
+                  <span aria-hidden="true">•</span>
+                  Culture and community
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Platform overview -->
+      <section class="slide" data-index="2" aria-label="Social media platforms">
+        <div class="slide-inner">
+          <div class="slide-header">
+            <div>
+              <div class="slide-kicker">Slide 3</div>
+              <h2 class="slide-title">Social media platform overview</h2>
+            </div>
+            <div class="slide-tag">Where ROK shows up online</div>
+          </div>
+
+          <div class="slide-body full">
+            <p class="lead-text">
+              ROK Hotel leans heavily on Instagram and Facebook, with lighter
+              use of LinkedIn and limited presence on X and TikTok. The mix
+              focuses on high quality visuals, hotel promotions and event
+              highlights.
+            </p>
+
+            <div class="card-grid" style="margin-top:1.1rem;">
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">Instagram</div>
+                  <span class="card-meta">@rokhotelkingston</span>
+                </div>
+                <div class="card-emph">~27K followers · primary channel</div>
+                <ul class="clean">
+                  <li>High quality photo and Reel content for rooms, pool, rooftop and food.</li>
+                  <li>Roughly two to three posts per week with seasonal campaigns and event pushes.</li>
+                  <li>Captions are mostly promotional with limited direct questions or calls for conversation.</li>
+                </ul>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">Facebook</div>
+                  <span class="card-meta">ROK Hotel Kingston</span>
+                </div>
+                <div class="card-emph">~3K followers · mirrored content</div>
+                <ul class="clean">
+                  <li>Cross posted content from Instagram with extra photo albums for events.</li>
+                  <li>Used for holidays, offers and general hotel announcements.</li>
+                  <li>Comments are present but responses are not always consistent.</li>
+                </ul>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">LinkedIn</div>
+                  <span class="card-meta">Company page</span>
+                </div>
+                <div class="card-emph">Corporate visibility</div>
+                <ul class="clean">
+                  <li>Light usage for hiring updates, awards and corporate news.</li>
+                  <li>Helps position the property within Hilton and the wider business community.</li>
+                </ul>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">X (Twitter) · TikTok</div>
+                  <span class="card-meta">Low activity</span>
+                </div>
+                <div class="card-emph">Under used potential</div>
+                <ul class="clean">
+                  <li>No consistently active official Twitter profile and little short form video presence.</li>
+                  <li>Missed opportunity for real time updates and trend driven content.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Stats and activity -->
+      <section class="slide" data-index="3" aria-label="Statistics and activity">
+        <div class="slide-inner">
+          <div class="slide-header">
+            <div>
+              <div class="slide-kicker">Slide 4</div>
+              <h2 class="slide-title">Social media statistics and activity</h2>
+            </div>
+            <div class="slide-tag">Performance snapshot</div>
+          </div>
+
+          <div class="slide-body">
+            <div>
+              <div class="section-label">Reach and scale</div>
+              <p class="lead-text">
+                ROK has built a strong Instagram following since opening, placing the hotel ahead of
+                several older Kingston competitors in audience size, although engagement per post is
+                modest relative to that reach.
+              </p>
+
+              <div class="stat-chips">
+                <div class="stat"><span>~27K</span> Instagram followers</div>
+                <div class="stat"><span>~3K</span> Facebook followers</div>
+                <div class="stat"><span>2–3</span> average posts per week on Instagram</div>
+              </div>
+
+              <ul class="clean" style="margin-top:1.1rem;">
+                <li>Engagement on typical Instagram posts sits in the tens of likes and a small number of comments.</li>
+                <li>Video views for Reels show better reach but comments are still limited.</li>
+                <li>Audience mix suggests a blend of locals, Jamaican diaspora and international travellers researching Kingston.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="section-label">Activity and content mix</div>
+              <ul class="clean">
+                <li>Visual focus on rooms, pool deck, rooftop bar and food along with seasonal promotions.</li>
+                <li>Event pushes for brunches, themed nights and public holidays drive short bursts of content.</li>
+                <li>Little visible user generated content or guest stories on the grid.</li>
+                <li>Captions lean toward one way announcements instead of two way conversation with followers.</li>
+              </ul>
+
+              <div class="note">
+                Takeaway: the hotel has strong visual assets and a healthy audience, but there is headroom to translate
+                reach into deeper interaction and advocacy.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Competitor comparison -->
+      <section class="slide" data-index="4" aria-label="Competitor comparison">
+        <div class="slide-inner">
+          <div class="slide-header">
+            <div>
+              <div class="slide-kicker">Slide 5</div>
+              <h2 class="slide-title">Competitor comparison</h2>
+            </div>
+            <div class="slide-tag">Jamaican hotel benchmarks</div>
+          </div>
+
+          <div class="slide-body full">
+            <p class="lead-text">
+              We compared ROK Hotel with Courtleigh Hotel, Jamaica Pegasus, Courtyard Kingston,
+              S Hotel Montego Bay and Terra Nova. The focus is on social media presence rather
+              than overall business performance.
+            </p>
+
+            <div class="compare-grid" style="margin-top:1.1rem;">
+              <div class="compare-card">
+                <div class="compare-name">ROK Hotel Kingston</div>
+                <div class="compare-focus">Strong Instagram reach · visual property focus</div>
+                <ul class="clean">
+                  <li>Newer brand with rapid follower growth on Instagram.</li>
+                  <li>Modern visuals, however engagement rate trails audience size.</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-name">Courtleigh Hotel and Suites</div>
+                <div class="compare-focus">Business hotel with F&amp;B storytelling</div>
+                <ul class="clean">
+                  <li>Highlights Alexander’s Restaurant and Mingles Bar along with community work.</li>
+                  <li>Present on Instagram, Facebook and Twitter with steady but moderate engagement.</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-name">The Jamaica Pegasus</div>
+                <div class="compare-focus">Legacy brand and events hub</div>
+                <ul class="clean">
+                  <li>Strong Facebook base and consistent Instagram content around events and awards.</li>
+                  <li>Invites guests to tag the hotel which encourages user generated posts.</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-name">Courtyard by Marriott Kingston</div>
+                <div class="compare-focus">Business travel and partnerships</div>
+                <ul class="clean">
+                  <li>Content centred on convenience, remote work and team partnerships such as football sponsorships.</li>
+                  <li>Audience smaller but aligned to corporate travellers.</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-name">S Hotel Montego Bay</div>
+                <div class="compare-focus">High impact lifestyle visuals</div>
+                <ul class="clean">
+                  <li>Resort style feed with strong use of influencers and accolades.</li>
+                  <li>Highest follower count in the set and very strong engagement on Instagram.</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-name">Terra Nova All Suite Hotel</div>
+                <div class="compare-focus">Boutique charm and food led content</div>
+                <ul class="clean">
+                  <li>Leverages Sunday brunch and fine dining to keep local followers engaged.</li>
+                  <li>Blends heritage storytelling with modern visuals.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="note">
+              Overall insight: ROK performs well on scale but competitors such as S Hotel, Terra Nova and Pegasus
+              show stronger community interaction and clearer content tilts.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Key insights -->
+      <section class="slide" data-index="5" aria-label="Key insights">
+        <div class="slide-inner">
+          <div class="slide-header">
+            <div>
+              <div class="slide-kicker">Slide 6</div>
+              <h2 class="slide-title">Key insights from analysis</h2>
+            </div>
+            <div class="slide-tag">What the data suggests</div>
+          </div>
+
+          <div class="slide-body full">
+            <div class="card-grid">
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">1. Reach outpaces engagement</div>
+                </div>
+                <ul class="clean">
+                  <li>ROK’s Instagram audience is large for a recent hotel, yet comment and share volumes are low.</li>
+                  <li>This hints at a broad but passive follower base with room to nudge interaction.</li>
+                </ul>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">2. Promotional bias</div>
+                </div>
+                <ul class="clean">
+                  <li>Many posts centre on offers, room types and events without much narrative around guest experience.</li>
+                  <li>Competitors that balance sales with storytelling create a stronger emotional hook.</li>
+                </ul>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">3. Under used community content</div>
+                </div>
+                <ul class="clean">
+                  <li>ROK shares little user generated content or staff stories on its main grid.</li>
+                  <li>Hotels that spotlight guests, team members and local partners see richer engagement.</li>
+                </ul>
+              </article>
+
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">4. Platform gaps</div>
+                </div>
+                <ul class="clean">
+                  <li>Limited experiments with TikTok and no consistent X presence reduce visibility with younger and real time audiences.</li>
+                  <li>Short form video trends in travel are a missed opportunity.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Recommendations -->
+      <section class="slide" data-index="6" aria-label="Recommendations">
+        <div class="slide-inner">
+          <div class="slide-header">
+            <div>
+              <div class="slide-kicker">Slide 7</div>
+              <h2 class="slide-title">Recommendations to improve engagement</h2>
+            </div>
+            <div class="slide-tag">From reach to relationships</div>
+          </div>
+
+          <div class="slide-body">
+            <div>
+              <div class="section-label">Content and storytelling</div>
+              <ul class="clean">
+                <li>
+                  Shift from mostly promotional captions to short stories around guest moments,
+                  Kingston experiences and the feeling of staying at ROK.
+                </li>
+                <li>
+                  Introduce regular staff and partner spotlights to humanise the brand and show the
+                  people behind the property.
+                </li>
+                <li>
+                  Build a consistent user generated content pipeline by inviting guests to tag
+                  a clear hashtag and resharing the best posts.
+                </li>
+              </ul>
+
+              <div class="section-label" style="margin-top:1.2rem;">Community and interaction</div>
+              <ul class="clean">
+                <li>
+                  Use Stories for polls, questions and quick Q&amp;A sessions for events, brunches and weekend stays.
+                </li>
+                <li>
+                  Reply visibly to comments and DMs to reinforce that a real team is listening and responding.
+                </li>
+                <li>
+                  Run simple social contests linked to on property rewards to stimulate shares and saves.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="section-label">Platform strategy and measurement</div>
+              <ul class="clean">
+                <li>
+                  Test a small series of TikTok or Reels concepts around rooftop vibes, food preparation and Kingston views.
+                </li>
+                <li>
+                  Re establish a basic X presence for real time guest support and event coverage when relevant.
+                </li>
+                <li>
+                  Track content performance by type (rooms, food, people, city) and double down on the formats that
+                  consistently earn saves, shares and comments.
+                </li>
+              </ul>
+
+              <div class="stat-chips">
+                <div class="stat">
+                  <span>Goal</span>
+                  Turn followers into advocates
+                </div>
+                <div class="stat">
+                  <span>Focus</span>
+                  Story first · sales second
+                </div>
+              </div>
+
+              <p class="footer-note">
+                Data based on public social media profiles for ROK Hotel and selected competitors
+                as at November 2025. Recommendations are designed for classroom discussion and
+                can be adapted for a live client presentation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="controls" aria-label="Slide controls">
+      <div class="controls-left">
+        <button class="nav-button" id="prevBtn">
+          <span class="nav-icon" aria-hidden="true">‹</span>
+          Previous
+        </button>
+        <span class="hint" id="hintText">Use arrow keys or click dots to navigate</span>
+      </div>
+      <div class="controls-right">
+        <div class="dots" id="dots" aria-label="Slide navigation dots"></div>
+        <div class="slide-indicator">
+          <span id="currentSlideLabel">1</span>/<span id="totalSlidesLabel">7</span>
+        </div>
+        <button class="nav-button primary" id="nextBtn">
+          Next
+          <span class="nav-icon" aria-hidden="true">›</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const progressFill = document.getElementById("progressFill");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const dotsContainer = document.getElementById("dots");
+      const currentLabel = document.getElementById("currentSlideLabel");
+      const totalLabel = document.getElementById("totalSlidesLabel");
+      const hintText = document.getElementById("hintText");
+
+
+      let currentIndex = 0;
+      const totalSlides = slides.length;
+      totalLabel.textContent = totalSlides.toString();
+
+      const dots = slides.map((_, index) => {
+        const dot = document.createElement("button");
+        dot.className = "dot";
+        dot.type = "button";
+        dot.setAttribute("aria-label", "Go to slide " + (index + 1));
+        dot.addEventListener("click", () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+        return dot;
+        const hintText = document.getElementById("hintText");
+
+      });
+
+      function updateProgress() {
+        const ratio = (currentIndex + 1) / totalSlides;
+        progressFill.style.width = (ratio * 100).toFixed(2) + "%";
+        currentLabel.textContent = (currentIndex + 1).toString();
+
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === totalSlides - 1;
+
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentIndex);
+        });
+      }
+// Hide hint text after a few seconds
+if (hintText) {
+  setTimeout(() => {
+    hintText.classList.add("hidden");
+  }, 4000); // 4 seconds, adjust as needed
+}
+
+      function goToSlide(index) {
+        if (index < 0 || index >= totalSlides || index === currentIndex) return;
+        slides[currentIndex].classList.remove("active");
+        slides[index].classList.add("active");
+        currentIndex = index;
+        updateProgress();
+      }
+
+      prevBtn.addEventListener("click", () => goToSlide(currentIndex - 1));
+      nextBtn.addEventListener("click", () => goToSlide(currentIndex + 1));
+
+      document.addEventListener("keydown", (event) => {
+        const key = event.key;
+        if (key === "ArrowRight" || key === "PageDown") {
+          event.preventDefault();
+          goToSlide(currentIndex + 1);
+        } else if (key === "ArrowLeft" || key === "PageUp") {
+          event.preventDefault();
+          goToSlide(currentIndex - 1);
+        } else if (key === "Home") {
+          event.preventDefault();
+          goToSlide(0);
+        } else if (key === "End") {
+          event.preventDefault();
+          goToSlide(totalSlides - 1);
+        }
+      });
+
+      let touchStartX = null;
+
+      document.addEventListener(
+        "touchstart",
+        (event) => {
+          const touch = event.touches[0];
+          touchStartX = touch.clientX;
+        },
+        { passive: true }
+      );
+
+      document.addEventListener(
+        "touchend",
+        (event) => {
+          if (touchStartX === null) return;
+          const touch = event.changedTouches[0];
+          const diffX = touch.clientX - touchStartX;
+          const threshold = 40;
+
+          if (diffX > threshold) {
+            goToSlide(currentIndex - 1);
+          } else if (diffX < -threshold) {
+            goToSlide(currentIndex + 1);
+          }
+
+          touchStartX = null;
+        },
+        { passive: true }
+      );
+
+      slides[0].classList.add("active");
+      dots[0].classList.add("active");
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
