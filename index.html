@@ -148,7 +148,7 @@
     .slides {
       position: relative;
       flex: 1;
-      padding: 0.75rem 3.5vw 6.4rem; /* more bottom padding so it clears the navbar */
+      padding: 0.75rem 3.5vw 6.4rem;
       display: flex;
       align-items: stretch;
       justify-content: center;
@@ -435,6 +435,12 @@
     .compare-name {
       font-weight: 600;
       font-size: 0.95rem;
+    }
+
+    .compare-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
     }
 
     .compare-focus {
@@ -806,7 +812,7 @@
         </div>
       </section>
 
-      <!-- Slide 3: Platform overview -->
+          <!-- Slide 3: Platform overview -->
       <section class="slide" data-index="2" aria-label="Social media platforms">
         <div class="slide-inner">
           <div class="slide-header">
@@ -823,12 +829,14 @@
           <div class="slide-body full">
             <p class="lead-text">
               ROK Hotel leans heavily on Instagram and Facebook, with lighter
-              use of LinkedIn and limited presence on X and TikTok. The mix
-              focuses on high quality visuals, hotel promotions and event
-              highlights.
+              use of LinkedIn and limited presence on X and TikTok. A separate
+              food and beverage handle also exists, which can split attention
+              between pages if the purpose is not clearly differentiated.
             </p>
 
             <div class="card-grid" style="margin-top:1.1rem;">
+
+              <!-- Main Instagram account -->
               <article class="card">
                 <div class="card-header">
                   <div class="card-title">
@@ -839,14 +847,15 @@
                   </div>
                   <span class="card-meta">@rokhotelkingston</span>
                 </div>
-                <div class="card-emph">~27K followers · primary channel</div>
+                <div class="card-emph">27K+ followers · primary channel</div>
                 <ul class="clean">
-                  <li>High quality photo and Reel content for rooms, pool, rooftop and food.</li>
-                  <li>Roughly two to three posts per week with seasonal campaigns and event pushes.</li>
-                  <li>Captions are mostly promotional with limited direct questions or calls for conversation.</li>
+                  <li>High quality photo and Reel content highlighting rooms, pool, rooftop and F&amp;B.</li>
+                  <li>Around two to three posts per week with campaign pushes for offers and events.</li>
+                  <li>Captions are mostly promotional with limited questions or conversation starters.</li>
                 </ul>
               </article>
 
+              <!-- Facebook -->
               <article class="card">
                 <div class="card-header">
                   <div class="card-title">
@@ -857,14 +866,15 @@
                   </div>
                   <span class="card-meta">ROK Hotel Kingston</span>
                 </div>
-                <div class="card-emph">~3K followers · mirrored content</div>
+                <div class="card-emph">3.2K followers · mirrored content</div>
                 <ul class="clean">
-                  <li>Cross posted content from Instagram with extra photo albums for events.</li>
-                  <li>Used for holidays, offers and general hotel announcements.</li>
-                  <li>Comments are present but responses are not always consistent.</li>
+                  <li>Primarily cross posts from Instagram plus photo albums for events and functions.</li>
+                  <li>Used for holidays, hotel updates and general promotional announcements.</li>
+                  <li>Comments appear on posts, but reply patterns are inconsistent.</li>
                 </ul>
               </article>
 
+              <!-- LinkedIn -->
               <article class="card">
                 <div class="card-header">
                   <div class="card-title">
@@ -877,11 +887,31 @@
                 </div>
                 <div class="card-emph">Corporate visibility</div>
                 <ul class="clean">
-                  <li>Light usage for hiring updates, awards and corporate news.</li>
-                  <li>Helps position the property within Hilton and the wider business community.</li>
+                  <li>Light usage for hiring updates, awards, brand news and partner mentions.</li>
+                  <li>Positions ROK within Hilton’s portfolio and Kingston’s business community.</li>
                 </ul>
               </article>
 
+              <!-- Where We ROK F&B account -->
+              <article class="card">
+                <div class="card-header">
+                  <div class="card-title">
+                    <span class="card-icon" aria-hidden="true">
+                      <i class="fa-solid fa-utensils"></i>
+                    </span>
+                    Where We ROK (Instagram)
+                  </div>
+                  <span class="card-meta">@wherewerok</span>
+                </div>
+                <div class="card-emph">~2.4K followers · 150+ posts</div>
+                <ul class="clean">
+                  <li>Food and beverage hub for Palate, ROKstone and ROK Café at the same property.</li>
+                  <li>Focuses on brunches, pop up parties and dining experiences with similar visuals to the main feed.</li>
+                  <li>This overlap makes it unclear why guests should follow both pages and can fragment engagement.</li>
+                </ul>
+              </article>
+
+              <!-- X / TikTok -->
               <article class="card">
                 <div class="card-header">
                   <div class="card-title">
@@ -894,10 +924,12 @@
                 </div>
                 <div class="card-emph">Under used potential</div>
                 <ul class="clean">
-                  <li>No consistently active official Twitter profile and little short form video presence.</li>
-                  <li>Missed opportunity for real time updates and trend driven content.</li>
+                  <li>No consistently active official X handle and no dedicated TikTok account for the hotel.</li>
+                  <li>However, TikTok shows around 408 public videos under <strong>#rokhotelkingston</strong>, indicating organic guest interest.</li>
+                  <li>This represents a missed opportunity to curate and participate in short form, trend driven travel content.</li>
                 </ul>
               </article>
+
             </div>
           </div>
         </div>
@@ -932,15 +964,20 @@
               </p>
 
               <div class="stat-chips">
-                <div class="stat"><span>~27K</span> Instagram followers</div>
-                <div class="stat"><span>~3K</span> Facebook followers</div>
-                <div class="stat"><span>2–3</span> average posts per week on Instagram</div>
+                <div class="stat"><span>27K+</span> Instagram followers</div>
+                <div class="stat"><span>3.2K</span> Facebook followers</div>
+                <div class="stat"><span>2 to 3</span> posts per week on Instagram</div>
               </div>
 
               <ul class="clean" style="margin-top:1.1rem;">
                 <li>Engagement on typical Instagram posts sits in the tens of likes and a small number of comments.</li>
                 <li>Video views for Reels show better reach but comments are still limited.</li>
                 <li>Audience mix suggests a blend of locals, Jamaican diaspora and international travellers researching Kingston.</li>
+                <li>
+                  Instagram engagement rate (last 30 days):
+                  <strong>0.19%</strong>
+                  (based on HypeAuditor).
+                </li>
               </ul>
             </div>
 
@@ -960,7 +997,7 @@
                   <div class="chart-bar-shell">
                     <div class="chart-bar" data-value="100"></div>
                   </div>
-                  <div class="chart-value">27K</div>
+                  <div class="chart-value">27K+</div>
                 </div>
                 <div class="chart-row">
                   <div class="chart-label">
@@ -968,9 +1005,9 @@
                     <span>Facebook</span>
                   </div>
                   <div class="chart-bar-shell">
-                    <div class="chart-bar" data-value="11"></div>
+                    <div class="chart-bar" data-value="12"></div>
                   </div>
-                  <div class="chart-value">3K</div>
+                  <div class="chart-value">3.2K</div>
                 </div>
               </div>
 
@@ -1010,13 +1047,15 @@
           <div class="slide-body full">
             <p class="lead-text">
               We compared ROK Hotel with Courtleigh Hotel, Jamaica Pegasus, Courtyard Kingston,
-              S Hotel Montego Bay and Terra Nova. The focus is on social media presence rather
+              S Hotel Kingston and Terra Nova. The focus is on social media presence rather
               than overall business performance.
             </p>
 
             <div class="compare-grid" style="margin-top:1.1rem;">
+
               <div class="compare-card">
                 <div class="compare-name">ROK Hotel Kingston</div>
+                <div class="compare-meta">Instagram: 27K+ · Facebook: 3.2K+</div>
                 <div class="compare-focus">Strong Instagram reach · visual property focus</div>
                 <ul class="clean">
                   <li>Newer brand with rapid follower growth on Instagram.</li>
@@ -1026,6 +1065,7 @@
 
               <div class="compare-card">
                 <div class="compare-name">Courtleigh Hotel and Suites</div>
+                <div class="compare-meta">Instagram: 5.6K+ followers (@courtleighhotel)</div>
                 <div class="compare-focus">Business hotel with F&amp;B storytelling</div>
                 <ul class="clean">
                   <li>Highlights Alexander’s Restaurant and Mingles Bar along with community work.</li>
@@ -1035,15 +1075,17 @@
 
               <div class="compare-card">
                 <div class="compare-name">The Jamaica Pegasus</div>
+                <div class="compare-meta">X (Twitter): 12K+ followers (@JamaicaPegasus)</div>
                 <div class="compare-focus">Legacy brand and events hub</div>
                 <ul class="clean">
                   <li>Strong Facebook base and consistent Instagram content around events and awards.</li>
-                  <li>Invites guests to tag the hotel which encourages user generated posts.</li>
+                  <li>Invites guests to tag the hotel, which encourages user generated posts.</li>
                 </ul>
               </div>
 
               <div class="compare-card">
                 <div class="compare-name">Courtyard by Marriott Kingston</div>
+                <div class="compare-meta">Instagram: 4.4K+ followers (@courtyardkingstonjamaica)</div>
                 <div class="compare-focus">Business travel and partnerships</div>
                 <ul class="clean">
                   <li>Content centred on convenience, remote work and team partnerships such as football sponsorships.</li>
@@ -1052,27 +1094,30 @@
               </div>
 
               <div class="compare-card">
-                <div class="compare-name">S Hotel Montego Bay</div>
-                <div class="compare-focus">High impact lifestyle visuals</div>
+                <div class="compare-name">S Hotel Kingston</div>
+                <div class="compare-meta">Instagram: 16K+ followers (@shotelkingstonjm)</div>
+                <div class="compare-focus">High impact lifestyle visuals in the city</div>
                 <ul class="clean">
-                  <li>Resort style feed with strong use of influencers and accolades.</li>
-                  <li>Highest follower count in the set and very strong engagement on Instagram.</li>
+                  <li>Emphasises rooftop pool, lobby design and restaurant / bar experiences.</li>
+                  <li>Uses polished photography and Reels to sell a city escape feel.</li>
                 </ul>
               </div>
 
               <div class="compare-card">
                 <div class="compare-name">Terra Nova All Suite Hotel</div>
+                <div class="compare-meta">Instagram: 18.3K followers (@terranovahotel)</div>
                 <div class="compare-focus">Boutique charm and food led content</div>
                 <ul class="clean">
                   <li>Leverages Sunday brunch and fine dining to keep local followers engaged.</li>
                   <li>Blends heritage storytelling with modern visuals.</li>
                 </ul>
               </div>
+
             </div>
 
             <div class="note">
-              Overall insight: ROK performs well on scale but competitors such as S Hotel, Terra Nova and Pegasus
-              show stronger community interaction and clearer content tilts.
+              Overall insight: ROK performs well on scale but competitors such as S Hotel Kingston,
+              Terra Nova and Pegasus show stronger community interaction and clearer content tilts.
             </div>
           </div>
         </div>
@@ -1105,7 +1150,7 @@
                 </div>
                 <ul class="clean">
                   <li>ROK’s Instagram audience is large for a recent hotel, yet comment and share volumes are low.</li>
-                  <li>This hints at a broad but passive follower base with room to nudge interaction.</li>
+                  <li>This points to a broad but passive follower base with room to nudge interaction.</li>
                 </ul>
               </article>
 
@@ -1145,12 +1190,12 @@
                     <span class="card-icon" aria-hidden="true">
                       <i class="fa-solid fa-circle-nodes"></i>
                     </span>
-                    4. Platform gaps
+                    4. Platform and handle gaps
                   </div>
                 </div>
                 <ul class="clean">
                   <li>Limited experiments with TikTok and no consistent X presence reduce visibility with younger and real time audiences.</li>
-                  <li>Short form video trends in travel are a missed opportunity.</li>
+                  <li>Split Instagram presence between @rokhotelkingston and @wherewerok risks fragmenting reach and confusing new followers.</li>
                 </ul>
               </article>
             </div>
@@ -1192,6 +1237,10 @@
                 <li>
                   Build a consistent user generated content pipeline by inviting guests to tag
                   a clear hashtag and resharing the best posts.
+                </li>
+                <li>
+                  Clarify the role of @wherewerok versus @rokhotelkingston or consolidate if necessary
+                  so that guests are not forced to choose between two similar pages.
                 </li>
               </ul>
 
